@@ -1,0 +1,31 @@
+{
+  "name": "fcc-basejump-voting",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Voting app implementation for the corresponding FreeCodeCamp basejump challenge",
+  "main": "app.js",
+  "dependencies": {
+    "body-parser": "~1.13.2",
+    "cookie-parser": "~1.3.5",
+    "debug": "~2.2.0",
+    "express": "~4.13.1",
+    "jade": "~1.11.0",
+    "morgan": "~1.6.1",
+    "serve-favicon": "~2.3.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./bin/www"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/minustehbare/fcc-basejump-voting.git"
+  },
+  "author": "minustehbare",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/minustehbare/fcc-basejump-voting/issues"
+  },
+  "homepage": "https://github.com/minustehbare/fcc-basejump-voting#readme"
+}
