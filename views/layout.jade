@@ -4,4 +4,8 @@ html
     title= title
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
+    if user
+      button(type="button", onclick="location.href=\"/auth/logout\"") Logout
+    else
+      button(type="button", onclick="location.href=\"/auth/github\"") Login with GitHub
     block content

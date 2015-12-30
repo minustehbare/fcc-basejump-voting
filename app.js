@@ -4,9 +4,18 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var passport = require("passport");
+var session = require("express-session");
+
+//load .env settings
+require("dotenv").load();
+
+//Passport setup
+require("./config/passport")(passport);
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
+var auth = require("./routes/auth")(passport);
 
 var app = express();
 
@@ -20,10 +29,18 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(session({ "secret": process.env.SESSION_SECRET }));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(function(req, res, next) {
+  res.locals.user = req.isAuthenticated() ? req.user : null;
+  next();
+});
 
 app.use('/', routes);
 app.use('/users', users);
+app.use("/auth", auth);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
