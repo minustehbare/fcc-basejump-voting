@@ -11,11 +11,11 @@ var session = require('express-session');
 require('dotenv').load();
 
 // Passport setup
-require('./config/passport')(passport);
+require('../config/passport')(passport);
 
-var routes = require('./routes/index');
-var users = require('./routes/users');
-var auth = require('./routes/auth')(passport);
+var routes = require('./controllers/index');
+var users = require('./controllers/users');
+var auth = require('./controllers/auth')(passport);
 
 var app = express();
 
