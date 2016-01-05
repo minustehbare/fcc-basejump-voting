@@ -1,19 +1,19 @@
-var express = require("express");
+var express = require('express');
 var router = express.Router();
 
 module.exports = function(passport) {
-  router.get("/github", passport.authenticate("github", { scope: [ 'user:email' ] }));
+  router.get('/github', passport.authenticate('github', { scope: [ 'user:email' ] }));
 
-  router.get("/github/callback",
-    passport.authenticate("github", { "failureRedirect": "/" }),
+  router.get('/github/callback',
+    passport.authenticate('github', { 'failureRedirect': '/' }),
     function(req, res) {
-      res.redirect("/");
+      res.redirect('/');
     }
   );
 
-  router.get("/logout", function(req, res) {
+  router.get('/logout', function(req, res) {
     req.logout();
-    res.redirect("/");
+    res.redirect('/');
   });
 
   return router;
