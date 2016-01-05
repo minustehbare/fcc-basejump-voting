@@ -1,5 +1,5 @@
 var express = require('express');
-var router = express.Router();
+var router = new express.Router();
 
 module.exports = function(passport) {
   router.get('/github', passport.authenticate('github', { scope: [ 'user:email' ] }));
