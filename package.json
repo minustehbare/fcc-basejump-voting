@@ -18,7 +18,9 @@
     "serve-favicon": "~2.3.0"
   },
   "devDependencies": {
-    "eslint": "~1.10.3"
+    "eslint": "^1.10.3",
+    "eslint-config-defaults": "^7.1.1",
+    "eslint-plugin-node": "^0.3.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -34,11 +36,5 @@
   "bugs": {
     "url": "https://github.com/minustehbare/fcc-basejump-voting/issues"
   },
-  "homepage": "https://github.com/minustehbare/fcc-basejump-voting#readme",
-  "eslintConfig": {
-    "extends": "eslint:recommended",
-    "env": {
-      "node": true
-    }
-  }
+  "homepage": "https://github.com/minustehbare/fcc-basejump-voting#readme"
 }
