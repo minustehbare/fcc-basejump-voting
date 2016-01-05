@@ -5,7 +5,7 @@ html
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
     if user
-      button(type="button", onclick="location.href=\"/auth/logout\"") Logout
+      button(type="button", onclick="location.href=\"/logout\"") Logout
     else
-      button(type="button", onclick="location.href=\"/auth/github\"") Login with GitHub
+      button(type="button", onclick="location.href=\"/login\"") Login
     block content
