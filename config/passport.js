@@ -1,12 +1,15 @@
 var GitHubStrategy = require('passport-github2');
+var User = require('../app/models/user.js');
 
 module.exports = function(passport) {
   passport.serializeUser(function(user, done) {
-    done(null, user);
+    done(null, user.id);
   });
 
-  passport.deserializeUser(function(obj, done) {
-    done(null, obj);
+  passport.deserializeUser(function(id, done) {
+    var user = User.findById(id, function(err, user) {
+      done(err, user);
+    });
   });
 
   passport.use(new GitHubStrategy(
@@ -17,8 +20,55 @@ module.exports = function(passport) {
     },
     function(accessToken, refreshToken, profile, done) {
       process.nextTick(function() {
-        return done(null, profile);
+        User.findOne({
+          'accounts': {
+            '$elemMatch': {
+              'provider': profile.provider,
+              'id': profile.id
+            }
+          }
+        },
+        function(err, user) {
+          if (err) {
+            throw err;
+          }
+
+          if (!user) {
+            return createUser(profile, done);
+          }
+          else {
+            return done(null, user);
+          }
+        });
       });
     }
   ));
 };
+
+function createUser(profile, done) {
+  var newUser = new User();
+  newUser.accounts = [{
+    'provider': profile.provider,
+    'id': profile.id
+  }];
+
+  if (profile.username) {
+    User.count({ 'username': profile.username }, function(err, count) {
+      if (err) {
+        throw err;
+      }
+
+      if (count === 0) {
+        newUser.username = profile.username;
+      }
+
+      newUser.save(function(err) {
+        if (err) {
+          throw err;
+        }
+
+        return done(null, newUser);
+      });
+    });
+  }
+}

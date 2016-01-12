@@ -6,12 +6,16 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var passport = require('passport');
 var session = require('express-session');
+var mongoose = require('mongoose');
 
 // load .env settings
 require('dotenv').load();
 
 // Passport setup
 require('../config/passport')(passport);
+
+// Mongoose setup
+require('../config/mongoose')(mongoose);
 
 var routes = require('./controllers/index');
 var users = require('./controllers/users');
@@ -38,11 +42,14 @@ app.use(session({
 app.use(express.static(path.join(__dirname, '../public')));
 app.use(passport.initialize());
 app.use(passport.session());
+
+// set locals
 app.use(function(req, res, next) {
   res.locals.user = req.isAuthenticated() ? req.user : null;
   next();
 });
 
+// bind controller routes
 app.use('/', routes);
 app.use('/users', users);
 app.use('/auth', auth);

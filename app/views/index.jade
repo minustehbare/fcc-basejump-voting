@@ -1,7 +1,8 @@
 extends layout
 
 block content
-  h1= title
   if user
-    p Logged in using #{user.provider} as #{user.username}
-  p Welcome to #{title}
+    p #{JSON.stringify(user)}
+  else
+    h1= title
+    p Welcome to #{title}
