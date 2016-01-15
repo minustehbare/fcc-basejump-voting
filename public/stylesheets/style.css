@@ -6,3 +6,27 @@ body {
 a {
   color: #00B7FF;
 }
+
+.form-group.option-group {
+  position: relative;
+}
+
+.close.clear-option {
+  position: absolute;
+  color: #a94442;
+  opacity: initial;
+  left: -20px;
+  top: 50%;
+  line-height: 34px;
+  margin-top: -17px;
+}
+
+.close.clear-option:hover, .close.clear-option:focus {
+  color: #a94442;
+  opacity: initial;
+}
+
+.form-control.option-input {
+  display: inline-block;
+  width: 100%;
+}

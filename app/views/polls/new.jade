@@ -1,4 +1,48 @@
 extends ../layout
 
+block append head
+  script(type="text/javascript"
+         src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0-rc.0/angular.min.js")
+  script(type="text/javascript"
+         src="/javascripts/angular/controllers/polls.js")
 block content
-  p this is the form for creating a new poll
+  div(ng-app="pollsApp" ng-strict-di="true")
+    div(ng-controller="PollsController as polls")
+      form(name="newPollForm"
+           ng-submit="polls.createPoll()"
+           novalidate)
+
+        div.form-group(ng-class="{ 'has-error': pollQuestionError() }")
+          label.control-label(for="pollQuestion") Poll question
+          input.form-control#pollQuestion(type="text"
+                                          name="pollQuestion"
+                                          placeholder="To be, or not to be?"
+                                          ng-model="newPoll.question"
+                                          ng-required="true"
+                                          aria-describedby="questionHelp")
+          span.help-block#questionHelp(ng-show="pollQuestionError()") Your poll needs a question!
+
+        div.form-group
+          ng-form(name="pollOptionsForm")
+            div(ng-class="{ 'has-error': pollOptionsError() }")
+              label.control-label Options
+            div(ng-repeat="pollOption in newPoll.options"
+                ng-class="{ 'has-error': optionFormError($index) }")
+              ng-form(name="optionForm_{{$index}}")
+                div.form-group.option-group
+                  button.close.clear-option(type="button"
+                                            ng-click="clearOption($index)"
+                                            aria-label="Clear"
+                                            tabindex="-1"
+                                            ng-show="pollOption.value") &times;
+                  input.form-control.option-input(type="text"
+                                     name="option"
+                                     placeHolder="{{optionPlaceholder($index)}}"
+                                     ng-model="pollOption.value"
+                                     ng-required="{{$index === 0 || $index === 1}}"
+                                     ng-change="adjustOptions()"
+                                     aria-describedby="optionHelp")
+            div(ng-class="{ 'has-error': pollOptionsError() }")
+              span.help-block#optionHelp(ng-show="pollOptionsError()"
+                                         ng-class="{ 'has-error': pollOptionsError() }") A poll without at least two choices is a bit silly!
+        button(type="submit" class="btn btn-default") Submit
