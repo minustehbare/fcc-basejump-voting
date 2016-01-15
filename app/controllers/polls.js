@@ -1,19 +1,32 @@
 var express = require('express');
 var router = new express.Router();
 
-router.get('/', function(req, res, next) {
+router.route('/')
+.get(function(req, res, next) {
   res.render('polls/index');
+})
+.post(function(req, res, next) {
+  res.send('created new poll');
 });
 
-router.get('/new', function(req, res, next) {
+router.route('/new')
+.get(function(req, res, next) {
   res.render('polls/new');
 });
 
-router.get('/:id', function(req, res, next) {
+router.route('/:id')
+.get(function(req, res, next) {
   res.render('polls/show');
+})
+.put(function(req, res, next) {
+  res.send('updated poll');
+})
+.delete(function(req, res, next) {
+  res.send('deleted poll');
 });
 
-router.get('/:id/edit', function(req, res, next) {
+router.route('/:id/edit')
+.get(function(req, res, next) {
   res.render('polls/edit');
 });
 
