@@ -1,0 +1,10 @@
+{
+  "extends": [
+    "angular"
+  ],
+  "plugins": ["angular"],
+  "rules": {
+    "angular/di": [2, "array"],
+    "angular/no-services": 0
+  }
+}
