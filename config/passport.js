@@ -61,10 +61,13 @@ function createUser(profile, done) {
       if (count === 0) {
         newUser.username = profile.username;
       }
+      else {
+        newUser.username = newUser.id;
+      }
 
       newUser.save(function(err) {
         if (err) {
-          throw err;
+          return done(err, null);
         }
 
         return done(null, newUser);
