@@ -7,7 +7,7 @@ module.exports = function(passport) {
   router.get('/github/callback',
     passport.authenticate('github', { 'failureRedirect': '/' }),
     function(req, res) {
-      res.redirect('/');
+      res.redirect('/' + req.user.username);
     }
   );
 
