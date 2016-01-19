@@ -1,16 +1,18 @@
-var app = angular.module('pollsApp', []);
-var pollsController = app.controller('PollsController', ['$scope', '$http', function($scope, $http) {
-  $scope.pollQuestionError = function() {
+angular.module('pollsApp', [])
+.controller('PollsController', ['$scope', '$http', '$log', function($scope, $http, $log) {
+  var vm = this;
+
+  vm.pollQuestionError = function() {
     return $scope.newPollForm.pollQuestion.$touched &&
       $scope.newPollForm.pollQuestion.$invalid;
-  }
+  };
 
-  $scope.optionFormError = function(i) {
+  vm.optionFormError = function(i) {
     var f = $scope.pollOptionsForm['optionForm_' + i];
     return f.$dirty && f.$invalid;
-  }
+  };
 
-  $scope.pollOptionsError = function() {
+  vm.pollOptionsError = function() {
     for (var i = 0; i < 2; i++) {
       var f = $scope.pollOptionsForm['optionForm_' + i];
       if (f && f.$dirty && f.$invalid) {
@@ -19,48 +21,45 @@ var pollsController = app.controller('PollsController', ['$scope', '$http', func
     }
 
     return false;
-  }
+  };
 
-  $scope.optionPlaceholder = function(i) {
+  vm.optionPlaceholder = function(i) {
     var text = 'Optional';
 
     if (i === 0) {
       text = 'To be';
-    }
-    else if (i === 1) {
+    } else if (i === 1) {
       text = 'Not to be';
     }
 
     return text;
-  }
+  };
 
-  $scope.clearOption = function(i) {
-    $scope.newPoll.options[i].value = null;
-    $scope.adjustOptions();
-  }
+  vm.clearOption = function(i) {
+    vm.newPoll.options[i].value = null;
+    vm.adjustOptions();
+  };
 
-  $scope.adjustOptions = function() {
-    var options = $scope.newPoll.options;
-
-    //provide an additional field that is optional if all options filled
-    if (options.every(function(elem) { return elem.value; })) {
-      $scope.addOptional();
+  vm.adjustOptions = function() {
+    // provide an additional field that is optional if all options filled
+    if (vm.newPoll.options.every(function(elem) { return elem.value; })) {
+      vm.addOptional();
       return;
     }
 
-    //consolidate options
-    for(var i = 0; i < options.length - 1; i++) {
-      var a = options[i];
-      
-      //skip if the option has a value
+    // consolidate options
+    for (var i = 0; i < vm.newPoll.options.length - 1; i++) {
+      var a = vm.newPoll.options[i];
+
+      // skip if the option has a value
       if (a.value) {
         continue;
       }
 
-      //option has no value
-      //find the next option with a value and swap them
-      for (var j = i + 1; j < options.length; j++) {
-        var b = options[j];
+      // option has no value
+      // find the next option with a value and swap them
+      for (var j = i + 1; j < vm.newPoll.options.length; j++) {
+        var b = vm.newPoll.options[j];
 
         if (b.value) {
           a.value = b.value;
@@ -70,8 +69,8 @@ var pollsController = app.controller('PollsController', ['$scope', '$http', func
       }
     }
 
-    options = options.reduce(function(prev, elem, index) {
-      //keep first two required options and any non-null optional option
+    // keep first two required options and any non-null optional option
+    vm.newPoll.options = vm.newPoll.options.reduce(function(prev, elem, index) {
       if (elem.value || index <= 1) {
         prev.push(elem);
       }
@@ -79,16 +78,14 @@ var pollsController = app.controller('PollsController', ['$scope', '$http', func
       return prev;
     }, []);
 
-    $scope.newPoll.options = options;
-    
-    if (options[0].value && options[1].value) {
-      $scope.addOptional();
+    if (vm.newPoll.options[0].value && vm.newPoll.options[1].value) {
+      vm.addOptional();
     }
 
     return;
-  }
+  };
 
-  $scope.newPoll = {
+  vm.newPoll = {
     'question': null,
     'options': [
       { 'value': null },
@@ -96,20 +93,20 @@ var pollsController = app.controller('PollsController', ['$scope', '$http', func
     ]
   };
 
-  $scope.addOptional = function() {
-    $scope.newPoll.options.push({
+  vm.addOptional = function() {
+    vm.newPoll.options.push({
       'value': null
     });
   };
 
-  this.createPoll = function() {
+  vm.createPoll = function() {
     if ($scope.newPollForm.$invalid) {
       return;
     }
 
     var poll = {
-      'question': $scope.newPoll.question,
-      'options': $scope.newPoll.options.reduce(function(prev, elem) {
+      'question': vm.newPoll.question,
+      'options': vm.newPoll.options.reduce(function(prev, elem) {
         elem.value !== null ? prev.push(elem.value) : null;
         return prev;
       }, [])
@@ -122,14 +119,10 @@ var pollsController = app.controller('PollsController', ['$scope', '$http', func
       'headers': { 'Content-Type': 'application/json' }
     })
     .success(function(data) {
-      console.log("hey, it posted!");
-      console.log(data);
+      $log.info(data);
     })
-    .error(function(data) {
-      console.log("uh oh, something went wrong");
-      console.log(data);
+    .error(function(err) {
+      $log.error(err);
     });
-
-    console.log(poll);
-  }
+  };
 }]);
