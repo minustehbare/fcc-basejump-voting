@@ -45,7 +45,7 @@ app.use(passport.session());
 
 // set locals
 app.use(function(req, res, next) {
-  res.locals.user = req.isAuthenticated() ? req.user : null;
+  res.locals.currentUser = req.isAuthenticated() ? req.user : null;
   next();
 });
 

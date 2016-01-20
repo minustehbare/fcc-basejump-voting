@@ -9,9 +9,9 @@ html
            integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7"
            crossorigin="anonymous")
   body
-    if user
+    if currentUser
       button(type="button" onclick="location.href=\"/logout\"") Logout
-      p Logged in as #{user.username}
+      p Logged in as #{currentUser.username}
     else
       button(type="button" onclick="location.href=\"/login\"") Login
     block content

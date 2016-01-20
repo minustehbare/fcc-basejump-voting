@@ -21,7 +21,7 @@ router.get('/:id', function(req, res, next) {
       res.status(500).send({ 'error': err });
     }
     else {
-      res.render('user', { 'showUser': user});
+      res.render('user', { 'user': user });
     }
   });
 });
