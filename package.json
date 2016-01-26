@@ -20,6 +20,8 @@
     "serve-favicon": "~2.3.0"
   },
   "devDependencies": {
+    "chai": "^3.4.1",
+    "chai-as-promised": "^5.2.0",
     "eslint": "^1.10.3",
     "eslint-config-angular": "^0.4.0",
     "eslint-config-defaults": "^7.1.1",
@@ -28,7 +30,7 @@
     "mocha": "^2.3.4"
   },
   "scripts": {
-    "test": "mocha --recursive --reporter nyan && exit 0",
+    "test": "mocha --timeout 10000 --recursive --reporter spec test/test_helper.js test/controllers test/models && exit 0",
     "start": "node ./bin/www",
     "eslint": "eslint . || exit 0"
   },
