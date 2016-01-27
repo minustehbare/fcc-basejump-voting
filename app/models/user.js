@@ -1,6 +1,5 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-var ObjectId = Schema.ObjectId;
 
 var accountsSchema = new Schema({
   '_id': false,
@@ -20,21 +19,26 @@ var userSchema = new Schema({
         'message': 'User must have at least one account'
       },
       {
-        'validator': function(v) {
-          return mongoose.model('User').count({
-            'accounts': {
-              '$elemMatch': {
-                'provider': v.provider,
-                'id': v.id
-              }
-            }
-          }, function(err, count) {
-            if (err) {
-              throw err;
-            }
+        'validator': function(v, done) {
+          var x = v.length;
+          var y = 0;
 
-            return count === 0;
-          });
+          for (var i = 0; i < x; i++) {
+            mongoose.model('User').count({
+              'accounts': {
+                '$elemMatch': {
+                  'provider': v[i].provider,
+                  'id': v[i].id
+                }
+              }
+            }, function(err, count) {
+              if (err) throw err;
+
+              y = y + 1;
+              if (count != 0) done(false);
+              if (y === x) done(true);
+            });
+          }
         },
         'message': 'A user with that account already exists'
       }
