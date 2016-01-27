@@ -18,6 +18,17 @@ var pollSchema = new mongoose.Schema({
           return v.length >= 2;
         },
         'message': 'Poll must have at least two options'
+      },
+      {
+        'validator': function(v) {
+          var temp = v.reduce(function(acc, option) {
+            if (acc.indexOf(option.text) === -1) acc.push(option.text);
+            return acc;
+          }, []);
+
+          return v.length === temp.length;
+        },
+        'message': 'Poll options must be unique'
       }
     ]
   }

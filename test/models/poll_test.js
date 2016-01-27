@@ -19,7 +19,7 @@ describe('Poll', function() {
       });
 
       it('should fail', function() {
-        return expect(subject.validate()).to.be.rejected;
+        return expect(subject.validate()).to.eventually.be.rejected;
       });
     });
 
@@ -29,7 +29,7 @@ describe('Poll', function() {
       });
 
       it('should fail', function() {
-        return expect(subject.validate()).to.be.rejected;
+        return expect(subject.validate()).to.eventually.be.rejected;
       });
     });
 
@@ -39,7 +39,24 @@ describe('Poll', function() {
       });
 
       it('should fail', function() {
-        return expect(subject.validate()).to.be.rejected;
+        return expect(subject.validate()).to.eventually.be.rejected;
+      });
+    });
+
+    context('when two or more options are the same', function() {
+      beforeEach(function() {
+        subject.addOption('repeat');
+        subject.addOption('repeat');
+      });
+
+      it('should fail', function() {
+        return expect(subject.validate()).to.eventually.be.rejected;
+      });
+    });
+
+    context('when there is a creator, question, and two or more options', function() {
+      it('should succeed', function() {
+        return expect(subject.validate()).to.eventually.be.fulfilled;
       });
     });
   });
@@ -58,11 +75,7 @@ describe('Poll', function() {
     context('when the creator has a poll with the same question', function() {
       beforeEach(function(done) {
         var otherPoll = getMockPoll();
-        Poll.remove({}, function(err) {
-          if (err) done(err);
-
-          otherPoll.save(done);
-        });
+        otherPoll.save(done);
       });
 
       it('should fail', function() {
@@ -70,7 +83,10 @@ describe('Poll', function() {
       });
 
       afterEach(function(done) {
-        Poll.remove({}, done);
+        Poll.remove({
+          'creator': 'pants',
+          'question': 'questionable'
+        }, done);
       });
     });
 
